@@ -60,8 +60,8 @@ export class ExtractionService {
   }
 
   private extractNames(text: string): void {
-    // First, look for common Italian names
-    const namePattern = /\b([A-Z][a-zà-ÿ]+(?:\s+[A-Z][a-zà-ÿ]+){1,2})\b/g;
+    // First, look for common Italian names with accented character support
+    const namePattern = /\b([A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+(?:\s+[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+){1,2})\b/g;
     let match;
 
     while ((match = namePattern.exec(text)) !== null) {
@@ -75,8 +75,8 @@ export class ExtractionService {
           COMMON_ITALIAN_SURNAMES.includes(word)
       );
 
-      // Also accept patterns like "Nome Cognome" that look like names
-      const looksLikeName = words.length >= 2 && words.every(w => /^[A-Z][a-zà-ÿ]+$/.test(w));
+      // Also accept patterns like "Nome Cognome" that look like names (with accented chars)
+      const looksLikeName = words.length >= 2 && words.every(w => /^[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+$/.test(w));
 
       if ((hasCommonName || looksLikeName) && !this.isAlreadyMatched(potentialName)) {
         const existingMatch = this.findExistingMatchByOriginal(potentialName);

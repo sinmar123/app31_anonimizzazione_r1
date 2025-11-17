@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import mammoth from 'mammoth';
-import { Document, Packer, Paragraph, TextRun } from 'docx';
+import JSZip from 'jszip';
 import { AnonymizationService } from './anonymizationService';
-import { DocumentInfo, MappingGrid, AnonymizationResult } from '../types';
+import { DocumentInfo, MappingGrid, AnonymizationResult, SensitiveDataMatch } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 export class DocxService {
@@ -113,24 +113,34 @@ export class DocxService {
     anonymizedText: string,
     originalName: string
   ): Promise<string> {
-    // Split text into paragraphs
-    const paragraphs = anonymizedText.split('\n').map(
-      line =>
-        new Paragraph({
-          children: [new TextRun(line)]
-        })
-    );
+    const docInfo = this.documents.get(documentId);
+    if (!docInfo) {
+      throw new Error(`Document with ID ${documentId} not found`);
+    }
 
-    const doc = new Document({
-      sections: [
-        {
-          properties: {},
-          children: paragraphs
-        }
-      ]
-    });
+    // Load the original DOCX file as a ZIP (DOCX is just a ZIP archive)
+    const originalBuffer = fs.readFileSync(docInfo.originalPath);
+    const zip = await JSZip.loadAsync(originalBuffer);
 
-    const buffer = await Packer.toBuffer(doc);
+    // Get the main document XML
+    const documentXmlFile = zip.file('word/document.xml');
+    if (!documentXmlFile) {
+      throw new Error('Invalid DOCX file: word/document.xml not found');
+    }
+    const documentXml = await documentXmlFile.async('string');
+
+    // Apply replacements to the XML while preserving structure
+    let modifiedXml = documentXml;
+
+    if (docInfo.mappingGrid) {
+      modifiedXml = this.applyReplacementsToXml(documentXml, docInfo.mappingGrid.mappings);
+    }
+
+    // Update the ZIP with the modified XML
+    zip.file('word/document.xml', modifiedXml);
+
+    // Generate the new DOCX buffer
+    const buffer = await zip.generateAsync({ type: 'nodebuffer' });
 
     const baseName = path.basename(originalName, path.extname(originalName));
     const anonymizedFileName = `${baseName}_anonymized_${documentId}.docx`;
@@ -139,6 +149,31 @@ export class DocxService {
     fs.writeFileSync(anonymizedPath, buffer);
 
     return anonymizedPath;
+  }
+
+  private applyReplacementsToXml(xml: string, mappings: SensitiveDataMatch[]): string {
+    let result = xml;
+
+    // Sort by length (longest first) to avoid partial replacements
+    const sortedMappings = [...mappings].sort(
+      (a, b) => b.original.length - a.original.length
+    );
+
+    for (const mapping of sortedMappings) {
+      // Escape special regex characters in the search pattern
+      const escapedOriginal = this.escapeRegExp(mapping.original);
+
+      // Replace all occurrences in the XML
+      // This will work for text that is not split by formatting tags
+      const regex = new RegExp(escapedOriginal, 'g');
+      result = result.replace(regex, mapping.anonymized);
+    }
+
+    return result;
+  }
+
+  private escapeRegExp(string: string): string {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   getDocumentInfo(documentId: string): DocumentInfo | undefined {

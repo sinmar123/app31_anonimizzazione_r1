@@ -21,9 +21,9 @@ export const PATTERNS = {
   // Italian addresses (simplified pattern)
   address: /\b(?:Via|Viale|Piazza|Corso|Largo|Vicolo|Strada|Contrada)\s+[A-Za-zÀ-ÿ\s]+,?\s*\d{1,5}(?:\s*[\/\-]?\s*[A-Za-z0-9]*)?\b/gi,
 
-  // Names (capitalized words, simplified)
-  // This is a heuristic - looks for 2-3 consecutive capitalized words
-  name: /\b[A-Z][a-zà-ÿ]+(?:\s+[A-Z][a-zà-ÿ]+){1,2}\b/g
+  // Names (capitalized words, including accented characters)
+  // Supports Italian accented characters: À, È, É, Ì, Ò, Ù and lowercase à, è, é, ì, ò, ù
+  name: /\b[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+(?:\s+[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+){1,2}\b/g
 };
 
 // Common Italian first names for better detection
@@ -32,7 +32,9 @@ export const COMMON_ITALIAN_NAMES = [
   'Luigi', 'Roberto', 'Andrea', 'Stefano', 'Alessandro', 'Paolo',
   'Maria', 'Anna', 'Francesca', 'Laura', 'Sara', 'Elena', 'Giulia',
   'Chiara', 'Valentina', 'Silvia', 'Martina', 'Federica', 'Alessia',
-  'Luca', 'Matteo', 'Davide', 'Simone', 'Riccardo', 'Fabio', 'Lorenzo'
+  'Luca', 'Matteo', 'Davide', 'Simone', 'Riccardo', 'Fabio', 'Lorenzo',
+  'Nicolò', 'Niccolò', 'Nicoló', 'Tommaso', 'Edoardo', 'Federico',
+  'Gabriele', 'Leonardo', 'Michele', 'Emanuele', 'Enrico', 'Filippo'
 ];
 
 // Common Italian surnames
