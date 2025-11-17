@@ -164,6 +164,78 @@
   background-color: rgba(220, 38, 38, 0.1);
 }
 
+.btn-delete {
+  color: var(--error-color);
+}
+
+.btn-delete:hover {
+  background-color: rgba(220, 38, 38, 0.1);
+}
+
+.add-entry-section {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.add-entry-form {
+  background-color: #f8fafc;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.add-entry-form h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+}
+
 .no-data {
   text-align: center;
   padding: 40px;
@@ -193,5 +265,17 @@
   .mapping-table th,
   .mapping-table td {
     padding: 8px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
   }
 }
