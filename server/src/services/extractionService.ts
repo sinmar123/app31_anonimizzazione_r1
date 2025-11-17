@@ -61,13 +61,15 @@ export class ExtractionService {
 
   private extractNames(text: string): void {
     // Pattern 1: Standard capitalized names (e.g., "Mario Rossi", "Nicolò Bianchi")
-    const standardNamePattern = /\b([A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+(?:\s+[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+){1,2})\b/g;
+    // Include accented vowels at end: à, è, é, ì, ò, ù
+    const standardNamePattern = /\b([A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+(?:\s+[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+){1,2})\b/gu;
 
-    // Pattern 2: Uppercase names (e.g., "PRONZATI CALAMARI Maurizia" or "ROSSI MARIO")
-    const uppercaseNamePattern = /\b([A-ZÀÈÉÌÒÙ]{2,}(?:\s+[A-ZÀÈÉÌÒÙ]{2,})*(?:\s+[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+)?)\b/g;
+    // Pattern 2: Uppercase names (e.g., "PRONZATI CALAMARI Maurizia" or "ROSSI MARIO" or "NICOLÒ")
+    // Include accented uppercase vowels: À, È, É, Ì, Ò, Ù
+    const uppercaseNamePattern = /\b([A-ZÀÈÉÌÒÙ]{2,}(?:\s+[A-ZÀÈÉÌÒÙ]{2,})*(?:\s+[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+)?)\b/gu;
 
     // Pattern 3: Mixed format (e.g., "Maurizia PRONZATI" - name followed by uppercase surname)
-    const mixedNamePattern = /\b([A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+\s+[A-ZÀÈÉÌÒÙ]{2,}(?:\s+[A-ZÀÈÉÌÒÙ]{2,})*)\b/g;
+    const mixedNamePattern = /\b([A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+\s+[A-ZÀÈÉÌÒÙ]{2,}(?:\s+[A-ZÀÈÉÌÒÙ]{2,})*)\b/gu;
 
     let match;
 
@@ -118,9 +120,10 @@ export class ExtractionService {
     });
 
     // Check if it looks like a name pattern
+    // Includes accented characters both uppercase and lowercase
     const looksLikeName = words.length >= 2 && words.every(w =>
-      /^[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+$/.test(w) || // Standard capitalized
-      /^[A-ZÀÈÉÌÒÙ]{2,}$/.test(w) // All uppercase
+      /^[A-ZÀÈÉÌÒÙ][a-zàèéìòùäëïöüâêîôû]+$/.test(w) || // Standard capitalized (Nicolò)
+      /^[A-ZÀÈÉÌÒÙ]+$/.test(w) // All uppercase including accents (NICOLÒ)
     );
 
     if ((hasCommonName || looksLikeName) && !this.isAlreadyMatched(potentialName)) {
