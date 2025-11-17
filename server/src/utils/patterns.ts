@@ -44,3 +44,52 @@ export const COMMON_ITALIAN_SURNAMES = [
   'Conti', 'De Luca', 'Mancini', 'Costa', 'Giordano', 'Rizzo',
   'Lombardi', 'Moretti', 'Barbieri', 'Fontana', 'Santoro', 'Mariani'
 ];
+
+// Words to exclude from name detection (titles, articles, common words)
+export const EXCLUDED_WORDS = [
+  // Titles and honorifics
+  'Sig', 'Signor', 'Signore', 'Signora', 'Signorina',
+  'Dott', 'Dottor', 'Dottore', 'Dottoressa',
+  'Avv', 'Avvocato', 'Avvocatessa',
+  'Ing', 'Ingegner', 'Ingegnere',
+  'Prof', 'Professor', 'Professore', 'Professoressa',
+  'Arch', 'Architetto',
+  'Rag', 'Ragioniere', 'Ragioniera',
+  'Geom', 'Geometra',
+  'Presidente', 'Direttore', 'Direttrice',
+  'Ministro', 'Senatore', 'Senatrice',
+  'Onorevole', 'Sindaco',
+  'Ill', 'Illmo', 'Illustrissimo',
+  'Egr', 'Egregio', 'Egregia',
+  'Gent', 'Gentile', 'Gentilissimo', 'Gentilissima',
+  'Spett', 'Spettabile',
+  'Preg', 'Pregiatissimo', 'Pregiatissima',
+  // Articles
+  'Il', 'Lo', 'La', 'Le', 'Li', 'Gli', 'I',
+  'Un', 'Una', 'Uno',
+  // Prepositions and conjunctions
+  'Di', 'Da', 'In', 'Con', 'Su', 'Per', 'Tra', 'Fra',
+  'Del', 'Dello', 'Della', 'Dei', 'Degli', 'Delle',
+  'Al', 'Allo', 'Alla', 'Ai', 'Agli', 'Alle',
+  'Dal', 'Dallo', 'Dalla', 'Dai', 'Dagli', 'Dalle',
+  'Nel', 'Nello', 'Nella', 'Nei', 'Negli', 'Nelle',
+  'Sul', 'Sullo', 'Sulla', 'Sui', 'Sugli', 'Sulle',
+  'Col', 'Coi',
+  'Ed', 'Od',
+  // Common words that might appear capitalized
+  'Che', 'Chi', 'Cosa', 'Come', 'Dove', 'Quando', 'Perché',
+  'Questo', 'Questa', 'Questi', 'Queste', 'Quello', 'Quella',
+  'Quale', 'Quali', 'Quanto', 'Quanta', 'Quanti', 'Quante',
+  'Tutto', 'Tutta', 'Tutti', 'Tutte',
+  'Altro', 'Altra', 'Altri', 'Altre',
+  'Ogni', 'Qualche', 'Alcuni', 'Alcune',
+  'Nessun', 'Nessuno', 'Nessuna',
+  'Molto', 'Molta', 'Molti', 'Molte',
+  'Poco', 'Poca', 'Pochi', 'Poche',
+  'Tanto', 'Tanta', 'Tanti', 'Tante',
+  'Proprio', 'Propria', 'Propri', 'Proprie',
+  'Stesso', 'Stessa', 'Stessi', 'Stesse',
+  // Verbs that might appear capitalized at start of sentence
+  'Essere', 'Avere', 'Fare', 'Dire', 'Dare', 'Stare',
+  'Andare', 'Venire', 'Potere', 'Volere', 'Dovere', 'Sapere'
+];

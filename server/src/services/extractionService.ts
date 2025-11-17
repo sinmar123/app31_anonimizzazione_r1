@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { SensitiveDataMatch, SensitiveDataType, ExtractionResult } from '../types';
-import { PATTERNS, COMMON_ITALIAN_NAMES, COMMON_ITALIAN_SURNAMES } from '../utils/patterns';
+import { PATTERNS, COMMON_ITALIAN_NAMES, COMMON_ITALIAN_SURNAMES, EXCLUDED_WORDS } from '../utils/patterns';
 import { generateFakeData, resetCounters } from '../utils/generators';
 
 export class ExtractionService {
@@ -67,6 +67,12 @@ export class ExtractionService {
     while ((match = namePattern.exec(text)) !== null) {
       const potentialName = match[1];
       const words = potentialName.split(/\s+/);
+
+      // Skip if any word is in the exclusion list (titles, articles, common words)
+      const hasExcludedWord = words.some(word => EXCLUDED_WORDS.includes(word));
+      if (hasExcludedWord) {
+        continue;
+      }
 
       // Check if any word is a common Italian name or surname
       const hasCommonName = words.some(
